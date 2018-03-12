@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Chusqer;
 use App\Hashtag;
 use App\Http\Requests\CreateChusqerRequest;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;

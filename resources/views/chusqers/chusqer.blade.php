@@ -18,19 +18,19 @@
             @endcan
 
             @can('like', $chusqer)
-                @if(Auth::check() && !Auth::user()->isMe($user))
-                    @if( Auth::user()->isFollowing($user))
-                        <form action="{{ $user->slug }}/dislike" method="post">
-                            {{ csrf_field() }}
-                            <button type="submit" class="alert button">Dislike</button>
-                        </form>
-                    @else
-                        <form action="{{ $user->slug }}/like" method="post">
-                            {{ csrf_field() }}
-                            <button type="submit" class="success button">Like</button>
-                        </form>
-                    @endif
-                @endif
+                <form action="{{ Route('chusqers.dislike', $chusqer->id) }}" method="post">
+                    {{ csrf_field() }}
+                    {{ method_field('POST') }}
+
+                    <button type="submit" class="alert button">Dislike</button>
+                </form>
+            @else
+                <form action="{{ Route('chusqers.like', $chusqer->id) }}" method="post">
+                    {{ csrf_field() }}
+                    {{ method_field('POST') }}
+
+                    <button type="submit" class="success button">Like</button>
+                </form>
             @endcan
 
             @can('delete', $chusqer)
@@ -38,14 +38,16 @@
                     {{ csrf_field() }}
                     {{ method_field('DELETE') }}
 
-                    <button type="submit" class="button alert">Borra</button>
+                    <button type="submit" class="alert button">Borra</button>
 
                 </form>
             @endcan
         </div>
     @endif
     {{--Manda al usuario a login cuando hace click en me gusta si no está logeado.--}}
-    <form action="{{ route('login') }}">
-        <button type="submit" class="button success">Me gusta</button>
-    </form>
+    @if (Auth::guest())
+        <form action="{{ route('login') }}">
+            <button type="submit" class="button success">Like</button>
+        </form>
+    @endif
 </div>
