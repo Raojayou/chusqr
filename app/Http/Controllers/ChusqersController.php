@@ -183,9 +183,9 @@ class ChusqersController extends Controller
         $user = $this->findLikeByUsername($username);
         $me = $request->user();
 
-        $me->follows()->attach($user);
+        $me->likes()->attach($user);
 
-        return redirect("/{$user->slug}")->withSuccess('Usuario Seguido');
+        return redirect("/{$user->slug}")->withSuccess('Me Gusta añadido');
     }
 
     public function dislike($username, Request $request)
@@ -193,7 +193,7 @@ class ChusqersController extends Controller
         $user = $this->findLikeByUsername($username);
         $me = $request->user();
 
-        $me->follows()->detach($user);
+        $me->likes()->detach($user);
 
         return redirect("/{$user->slug}")->withSuccess('Lo ha dejado de gustar');
 
