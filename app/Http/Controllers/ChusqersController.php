@@ -42,26 +42,27 @@ class ChusqersController extends Controller
      * @param CreateChusqerRequest $request
      * @return mixed
      */
-    public function store(CreateChusqerRequest $request){
+    public function store(CreateChusqerRequest $request)
+    {
 
         $user = $request->user();
 
         $hashtags = $this->extractHashtags($request->input('content'));
 
 
-        if( $image = $request->file('image') ){
-            $url = $image->store('image','public');
-        }else{
+        if ($image = $request->file('image')) {
+            $url = $image->store('image', 'public');
+        } else {
             $url = "https://picsum.photos/150/150/?random";
         }
 
         $chusqer = Chusqer::create([
-            'user_id'   => $user->id,
-            'content'   => $request->input('content'),
-            'image'     => $url,
+            'user_id' => $user->id,
+            'content' => $request->input('content'),
+            'image' => $url,
         ]);
 
-        foreach ($hashtags as $singleHashtag){
+        foreach ($hashtags as $singleHashtag) {
             $hashtag = Hashtag::firstOrCreate(['slug' => $singleHashtag]);
             $chusqer->hashtags()->attach($hashtag);
         }
@@ -77,7 +78,7 @@ class ChusqersController extends Controller
      */
     public function edit(Chusqer $chusqer)
     {
-        if( ! Auth::user()->can('delete', $chusqer) ){
+        if (!Auth::user()->can('delete', $chusqer)) {
             return redirect()->route('home');
         }
 
@@ -88,26 +89,25 @@ class ChusqersController extends Controller
 
     public function patch(CreateChusqerRequest $request, Chusqer $chusqer)
     {
-        if( ! Auth::user()->can('delete', $chusqer) ){
+        if (!Auth::user()->can('delete', $chusqer)) {
             return redirect()->route('home');
         }
 
-        if( $image = $request->file('image') ){
-            if( !strpos($chusqer->image, "http") ) {
+        if ($image = $request->file('image')) {
+            if (!strpos($chusqer->image, "http")) {
                 $routeParts = explode('/', $chusqer->image);
-                Storage::disk('public')->delete('chusqers/'.end($routeParts));
+                Storage::disk('public')->delete('chusqers/' . end($routeParts));
             }
 
-            $url = $image->store('chusqers','public');
-        }else{
+            $url = $image->store('chusqers', 'public');
+        } else {
             $url = $chusqer->image;
         }
 
 
-
         $chusqer->fill([
             'content' => $request->input('content'),
-            'image'     => $url,
+            'image' => $url,
         ]);
 
         $chusqer->update();
@@ -122,7 +122,7 @@ class ChusqersController extends Controller
      */
     public function destroy(Chusqer $chusqer)
     {
-        if( ! Auth::user()->can('delete', $chusqer) ){
+        if (!Auth::user()->can('delete', $chusqer)) {
             return redirect()->route('home');
         }
 
@@ -135,12 +135,12 @@ class ChusqersController extends Controller
     {
         preg_match_all("/(#\w+)/u", $content, $matches);
 
-        if( $matches ){
+        if ($matches) {
             $hashtagsValues = array_count_values($matches[0]);
             $hashtags = array_keys($hashtagsValues);
         }
 
-        array_walk($hashtags, function(&$value){
+        array_walk($hashtags, function (&$value) {
             $value = str_replace("#", "", $value);
         });
 
@@ -167,6 +167,34 @@ class ChusqersController extends Controller
         ]);
     }
 
+    /**
+     * Busca los likes de un chusqer
+     * @param $chusqr
+     * @return mixed
+     */
+    public function findLikeByUsername($username)
+    {
+        return User::where('slug', $username)->firstOrFail();
+    }
 
+    public function like($username, Request $request)
+    {
+        $user = $this->findLikeByUsername($username);
+        $me = $request->user();
 
+        $me->follows()->attach($user);
+
+        return redirect("/{$user->slug}")->withSuccess('Usuario Seguido');
+    }
+
+    public function dislike($username, Request $request)
+    {
+        $user = $this->findLikeByUsername($username);
+        $me = $request->user();
+
+        $me->follows()->detach($user);
+
+        return redirect("/{$user->slug}")->withSuccess('Lo ha dejado de gustar');
+
+    }
 }

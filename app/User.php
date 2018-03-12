@@ -81,4 +81,16 @@ class User extends Authenticatable
         return Auth::user()->id == $this->id;
     }
 
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'likes', 'user_id', 'liked_id');
+    }
+    public function like()
+    {
+        return $this->belongsToMany(User::class, 'likes', 'liked_id', 'user_id');
+    }
+    public function isLiking(User $user)
+    {
+        return $this->likes->contains($user);
+    }
 }

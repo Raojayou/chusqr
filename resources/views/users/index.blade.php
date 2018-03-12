@@ -14,6 +14,7 @@
                         <th>Chusqers</th>
                         <th class="text-center"><a href="/{{ $user->slug }}/follows">Following</a></th>
                         <th class="text-center"><a href="/{{ $user->slug }}/followers">Followers</a></th>
+                        <th class="text-center"><a href="/{{ $user->slug }}/likes">Likes</a></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -21,6 +22,7 @@
                         <td>{{ $user->chusqers->count() }}</td>
                         <td>{{ $user->follows->count() }}</td>
                         <td>{{ $user->followers->count() }}</td>
+                        {{--<td>{{ $user->likes->count() > 0 }}</td>--}}
                     </tr>
                     </tbody>
                 </table>

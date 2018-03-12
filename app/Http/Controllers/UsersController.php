@@ -242,7 +242,27 @@ class UsersController extends Controller
             'conversation' => $conversation
         ]);
     }
+    public function findLikeByChusqer($chusqr)
+    {
+        return User::where('like', $chusqr)->firstOrFail();
+    }
 
+    /**
+     * Muestra los likes que tiene un usuario.
+     *
+     * @param $username
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function likes($chusqr)
+    {
+        $chusqr = $this->findLikeByChusqer($chusqr);
+        $likes = $chusqr->likes;
+
+        return view('chusqers.like', [
+            'chusqr' => $chusqr,
+            'likes' => $likes
+        ]);
+    }
     public function profile()
     {
         return view('users.edit');

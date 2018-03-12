@@ -26,14 +26,16 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('/chusqers/create', 'ChusqersController@create');
     Route::post('/chusqers/create', 'ChusqersController@store');
+    Route::post('/{chusqers}/like', 'ChusqersController@like')->name('chusqers.like');
+    Route::post('/{chusqers}/dislike', 'ChusqersController@dislike')->name('chusqers.dislike');
     Route::get('/chusqers/{chusqer}/edit', 'ChusqersController@edit')->name('chusqers.edit');
     Route::patch('/chusqers/{chusqer}', 'ChusqersController@patch')->name('chusqers.patch');
     Route::delete('/chusqers/{chusqer}', 'ChusqersController@destroy')->name('chusqers.delete');
+
     Route::get('/conversations/{conversation}', 'UsersController@showConversation')->name('conversation.show');
     Route::post('/{user}/follow', 'UsersController@follow');
     Route::post('/{user}/unfollow', 'UsersController@unfollow');
     Route::post('/{user}/dms', 'UsersController@sendPrivateMessage');
-
 
     Route::get('/profile/edit', 'UsersController@profile')->name('profile');
     Route::get('/profile/account', 'UsersController@edit')->name('profile.account');
@@ -51,6 +53,7 @@ Route::get('/chusqers/{chusqer}', 'ChusqersController@show')->name('chusqers.sho
 Route::get('/{user}', 'UsersController@show')->name('user');
 Route::get('/{user}/follows', 'UsersController@follows');
 Route::get('/{user}/followers', 'UsersController@followers');
+Route::get('/{user}/likes', 'UsersController@likes');
 
 
 
