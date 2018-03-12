@@ -173,29 +173,29 @@ class ChusqersController extends Controller
      * @param $chusqr
      * @return mixed
      */
-    public function findLikeByUsername($username)
+    public function findLikeByChusqer($chusqer)
     {
-        return User::where('slug', $username)->firstOrFail();
+        return Chusqer::where('id', $chusqer)->firstOrFail();
     }
 
-    public function like($username, Request $request)
+    public function like($chusqer, Request $request)
     {
-        $user = $this->findLikeByUsername($username);
+        $chusqer = $this->findLikeByChusqer($chusqer);
         $me = $request->user();
 
-        $me->likes()->attach($user);
+        $me->likes()->attach($chusqer);
 
-        return redirect("/{$user->slug}")->withSuccess('Me Gusta añadido');
+        return redirect("/{$chusqer->id}")->withSuccess('Me Gusta añadido');
     }
 
-    public function dislike($username, Request $request)
+    public function dislike($chusqer, Request $request)
     {
-        $user = $this->findLikeByUsername($username);
+        $chusqer = $this->findLikeByChusqer($chusqer);
         $me = $request->user();
 
-        $me->likes()->detach($user);
+        $me->likes()->detach($chusqer);
 
-        return redirect("/{$user->slug}")->withSuccess('Lo ha dejado de gustar');
+        return redirect("/{$chusqer->id}")->withSuccess('Lo ha dejado de gustar');
 
     }
 }
